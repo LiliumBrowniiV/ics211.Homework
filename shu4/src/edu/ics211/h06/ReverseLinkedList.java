@@ -66,7 +66,7 @@ public class ReverseLinkedList<E> {
   // add at the end of the list, always returns true
   public boolean add(E element) {
 	  if(size() == 0) {
-		  tail= new LinkedNode<E>(null,null);
+		  tail = new LinkedNode<E>(null,null);
 	 }
 	 if(tail.item == null) {
 		tail.item = element;
@@ -84,23 +84,24 @@ public class ReverseLinkedList<E> {
 	  } 
 	  
 	  if(size() == 0) {
-		  tail = new LinkedNode<E>(null,null);
-	 }
-	  
+		add(element);
+		return;
+	 } 
+	  if(tail.item == null) {
+			tail.item = element;
+			return;
+	  }
 	  if(index == -size() - 1) {
 		  LinkedNode <E> parentToBe = getNode(-size());
 		  LinkedNode <E> newNode = new LinkedNode<E>(element, null);
 		  parentToBe.prev = newNode;
+		  return;
 		  
 	  } else if (index == size()){
 		  add(element);
 		  return;
 	  }
-	  if(getNode(index) == tail) {
-		  add(element);
-		  return;
-	  }
-	  LinkedNode <E> parentToBe = getNode(index + 1);
+	  LinkedNode <E> parentToBe = getNode(index);
 	  LinkedNode <E> newNode = new LinkedNode<E>(element, parentToBe.prev);
 	  parentToBe.prev = newNode;
   } 
