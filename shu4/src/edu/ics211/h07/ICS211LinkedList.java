@@ -1,9 +1,8 @@
 package edu.ics211.h07;
 
-import java.util.Iterator;
 
-public class ICS211LinkedList<E> {
-	private static class LinkedNode<T> {
+public class ICS211LinkedList<E>{
+	private static class LinkedNode<T>{
 	private T item;
 	private LinkedNode<T> next;
 	/** 
@@ -264,10 +263,6 @@ public class ICS211LinkedList<E> {
 		  --size;
 		  return temp;
 	}
-	public Iterator<E> LinkListIterator(){
-		return new LinkedListIterator();
-	}
-
 	/** 
 	 * concatenates the elements of the linked list, separated by " ==> "
 	 * @return the string representation of the list
@@ -287,13 +282,75 @@ public class ICS211LinkedList<E> {
 		return result.toString();
 	}
 
-
 	/** 
 	 * unit test method -- basic testing of the functionality
 	 * @param required, ignored
 	 */
+	public java.util.Iterator<E> LinkListIterator() {
+		return new LinkedListIterator();
+	}
+	
+	private class LinkedListIterator implements java.util.Iterator<E> {
+	  private LinkedNode<E> current;
+	  private LinkedNode <E> previous = null;
+	  
+	  private LinkedListIterator() {
+		  current = head;
+	  }
+	   
+	  public boolean hasNext() {
+	    return (current != null);
+	  }
+
+	  public E next() {
+	    if (hasNext()) {
+	    	if(previous == null) {
+	    		System.out.println("imp = null");
+	 	    	 previous = current;
+	 	    	 current = current.next;
+	 	    	 return previous.item;
+	 	     } else if (previous.next.equals(current)) {
+	 	    	 System.out.println("imp p = head");
+	 	    	E result = current.item;
+	 	    	 current = current.next;
+	 	    	 return result;
+	 	    	 
+	 	     } else {
+	 	    	System.out.println("imp base case");
+	 	    	previous = previous.next;
+	 	    	E result = current.item;
+		    	current = current.next;
+		    	return result;
+	 	     } 
+	    } else {
+	    	// else: no next element
+	    	throw new java.util.NoSuchElementException("linked list.next");
+	    }  
+	  }
+	  public void remove() {
+		  checkInvariants();
+		  if(previous != null && current != null) {
+			  if(previous.next.equals(current)) {
+				  head = current;
+				  previous = null;
+			  } else{
+				  previous.next = previous.next.next;
+				  current = current.next;
+			  }
+			 
+		  } else if(current == null) {
+			  previous.next = null;
+			  tail = previous;
+		  } else {
+			  throw new IllegalStateException();
+		  }
+		  size--;
+		  checkInvariants();
+	  }
+	}
 	public static void main (String [] arguments) {
 		ICS211LinkedList<String> ll = new ICS211LinkedList<String>();
+		//java.util.Iterator<String> iter = ll.LinkListIterator();
 		System.out.println (ll);
 		ll.add ("foo");
 		System.out.println (ll);
@@ -305,44 +362,6 @@ public class ICS211LinkedList<E> {
 		System.out.println (ll);
 		ll.add (1, "world");
 		System.out.println (ll);
-	}
-	
-	
-	private class LinkedListIterator implements java.util.Iterator<E> {
-	  private LinkedNode <E> previous = null;
-	  private LinkedNode<E> current;
-
-	
-	  private LinkedListIterator() {
-	    current = head;  // head is declared in the enclosing class
-	  }
-
-	  public boolean hasNext() {
-	    return (current != null);
-	  }
-
-	  public E next() {
-	    if (hasNext()) {
-	      E result = current.item;
-	      previous = current;
-	      current = current.next; 
-	      // may be null
-	      return result;
-	    }  // else: no next element
-	    throw new java.util.NoSuchElementException("linked list.next");
-	  }
- 
-	  public void remove() {
-		  checkInvariants();
-		  if(previous != null && current != null) {
-			  previous.next = previous.next.next;
-			  current = previous;
-			  previous = null;
-		  } else {
-			  throw new IllegalStateException();
-		  }
-		  checkInvariants();
-	  }
 	}
 }
 
