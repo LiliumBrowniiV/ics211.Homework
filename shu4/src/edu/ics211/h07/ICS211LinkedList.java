@@ -301,22 +301,23 @@ public class ICS211LinkedList<E>{
 	  public boolean hasNext() {
 	    return (current != null);
 	  }
-
+	  int count = 0;
 	  public E next() {
+		  count = 0;
 	    if (hasNext()) {
 	    	if(previous == null) {
-	    		System.out.println("imp = null");
+	    		//System.out.println("imp = null");
 	 	    	 previous = current;
 	 	    	 current = current.next;
 	 	    	 return previous.item;
 	 	     } else if (previous.next.equals(current)) {
-	 	    	 System.out.println("imp p = head");
+	 	    	 //System.out.println("imp p = head");
 	 	    	E result = current.item;
 	 	    	 current = current.next;
 	 	    	 return result;
 	 	    	 
 	 	     } else {
-	 	    	System.out.println("imp base case");
+	 	    	//System.out.println("imp base case");
 	 	    	previous = previous.next;
 	 	    	E result = current.item;
 		    	current = current.next;
@@ -329,22 +330,31 @@ public class ICS211LinkedList<E>{
 	  }
 	  public void remove() {
 		  checkInvariants();
+		  if(count == 1) {
+			  count = 0;
+			  throw new IllegalStateException();
+		  }
 		  if(previous != null && current != null) {
 			  if(previous.next.equals(current)) {
+				  count = 1;
 				  head = current;
 				  previous = null;
 			  } else{
+				  count = 1;
 				  previous.next = previous.next.next;
-				  current = current.next;
 			  }
 			 
 		  } else if(current == null) {
+			  count = 1;
 			  previous.next = null;
 			  tail = previous;
 		  } else {
 			  throw new IllegalStateException();
 		  }
 		  size--;
+		  if(size == 0) {
+			  head = tail = null;
+		  }
 		  checkInvariants();
 	  }
 	}
