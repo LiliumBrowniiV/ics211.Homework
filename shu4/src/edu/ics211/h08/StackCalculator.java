@@ -14,7 +14,7 @@ public class StackCalculator {
 	public void UserInterface() {
 		String input;
 		while (true) {
-			System.out.println("Enter numbers to calculate; = to stop and get result");
+			System.out.println("Enter numbers to calculate; = to stop and get result ");
 			input = sc.nextLine();
 			if(input.equals("=")) {
 				CheckValidity();
