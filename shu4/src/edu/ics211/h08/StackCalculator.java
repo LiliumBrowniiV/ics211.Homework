@@ -14,41 +14,51 @@ public class StackCalculator {
 	public void UserInterface() {
 		String input;
 		while (true) {
-			System.out.println("Enter numbers to calculate; = to stop and get result ");
+			System.out.println("Enter operands or operators1 to calculate; = to stop and get result ");
 			input = sc.nextLine();
 			if(input.equals("=")) {
-				CheckValidity();
-				System.out.println(getTop());
+				CheckFinalValidity();
+				System.out.println("The final result is : " + getTop());
 				break;
 			} else if(!input.equals("+") && !input.equals("-") && !input.equals("*") && !input.equals("/")) {
 				pushValue(Double.parseDouble(input));
 			} else {
-				applyOperation(input.charAt(0));
+				try {
+					applyOperation(input.charAt(0));
+				} catch (EmptyStackException e) {
+					System.out.println("Please make sure your postfix expression in valid");
+					continue;
+					}
+				}
 			}
 		}
-	}
 
 	public void pushValue(double value) {
 		stack.push(value);
 	}
 	public void applyOperation(char operation) {
+		CheckValidity();
 		Double FirstPop = stack.pop();
 		Double SecondPop = stack.pop();
 		Double result = 0.0;
 		if(Character.compare(operation, '+') == 0) {
 			result = SecondPop + FirstPop;
+			System.out.println("result : " + result);
 			pushValue(result);
 			result = 0.0;
 		} else if(Character.compare(operation, '-') == 0) {
 			result = SecondPop - FirstPop;
+			System.out.println("result : " + result);
 			pushValue(result);
 			result = 0.0;
 		}  else if(Character.compare(operation, '*') == 0) {
 			result = SecondPop * FirstPop;
+			System.out.println("result : " + result);
 			pushValue(result);
 			result = 0.0;
 		}  else if(Character.compare(operation, '/') == 0) {
 			result = SecondPop / FirstPop;
+			System.out.println("result : " + result);
 			pushValue(result);
 			result = 0.0;
 		}	
@@ -59,11 +69,25 @@ public class StackCalculator {
 	}
 	
 	public void CheckValidity() {
-		Double temp  = stack.pop();
-		if(!stack.empty()) {
-			throw new ArithmeticException("The postfix is invalid"); 
+		if(stack.empty()) {
+			throw new EmptyStackException();
+		} 
+		Double temp1 = stack.pop();
+		if(stack.empty()) {
+			stack.push(temp1);
+			throw new EmptyStackException();
+		} else {
+			stack.push(temp1);
+			}
 		}
-		stack.push(temp);
+	public void CheckFinalValidity() {
+		Double temp = stack.pop();
+		if(!stack.empty()) {
+			stack.push(temp);
+			throw new ArithmeticException("The postfix is invalid"); 
+		} else {
+			stack.push(temp);
+		}
 	}
 	
 	public static void main(String[] arg) {
