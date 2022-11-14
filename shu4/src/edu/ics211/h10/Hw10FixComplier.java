@@ -1,9 +1,6 @@
 package edu.ics211.h10;
 import java.util.*;
 public class Hw10FixComplier {
-	public static void main(String[] args) {
-		System.out.println(convertPostFix("1*(2+3)*4"));
-	}
 	 public static String convertPostFix(String arg) {
 		return parseExp(new HW10StringIterator(arg));
 	}		
