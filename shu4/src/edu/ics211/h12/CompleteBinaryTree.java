@@ -143,16 +143,29 @@ public class CompleteBinaryTree<E> implements Iterable<E> {
 	}
 	private String toString(int index) {
 		 if(nodes[index] == null) {
-			 return "- ";
+			 return "";
 		 }
 		 int left =  2 * index + 1;
 		 int right = 2 * index + 2;
 		 if(nodes[left] == null && nodes[right] == null) {
-			 return (nodes[index]).toString();
+			 return nodes[index].toString();
 		 }
-		 return toString(left) + ", " + nodes[index].toString()+", " + toString(right);
+		 return toString(left) + "," + nodes[index].toString()+ "," + toString(right);
 	}
-
+	public static void main(String[] args) {
+		CompleteBinaryTree<String> CBT = new CompleteBinaryTree<String>();
+		CBT.add("zero");
+		CBT.add("neg-five");
+		CBT.add("five");
+		CBT.add("two");
+		CBT.add("neg-two");
+		CBT.add("seven");
+		CBT.add("neg-one");
+		Iterator<String> iter =  CBT.iterator();
+		while(iter.hasNext()) {
+			System.out.println(iter.next());
+		}
+		}
  
 	
 }

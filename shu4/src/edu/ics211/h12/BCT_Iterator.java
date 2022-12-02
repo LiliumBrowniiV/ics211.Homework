@@ -45,7 +45,12 @@ public class BCT_Iterator<E> implements Iterator<E> {
 	}
 	
 	private void pushLeft(int index) {
-		visit.push(index);
+		for(int i = index; i < arr.length; i += 0) {
+			if(arr[i] != null) {
+			visit.push(i);
+			}
+			i = 2 * i + 1;
+		}
 	}
 	private final void resize() {
 		Object[] temp = arr;

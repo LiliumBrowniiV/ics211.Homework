@@ -2,10 +2,10 @@ package edu.ics211.h12;
 
 import java.util.*;
 
-public class BST_Iterator<K extends Comparable<K>, V> implements Iterator<TreeNode<K,V>> {
-	private Stack<TreeNode<K, V>> visit;
-	public BST_Iterator(TreeNode<K, V> root){
-		visit = new Stack<TreeNode<K, V>>();
+public class BST_Iterator<V> implements Iterator<V> {
+	private Stack<TreeNode<?, V>> visit;
+	public BST_Iterator(TreeNode<?, V> root){
+		visit = new Stack<TreeNode<?, V>>();
 	 	pushLeft(root);
 	}
 	
@@ -14,20 +14,20 @@ public class BST_Iterator<K extends Comparable<K>, V> implements Iterator<TreeNo
 		return !visit.isEmpty();
 	}
 	@Override
-	public TreeNode<K, V> next() {
+	public V next() {
 		if(!hasNext()) {
 			return null;
 		}
 		
-		TreeNode<K, V> current = visit.pop();
+		TreeNode<?, V> current = visit.pop();
 		if(current.right != null) {
 			pushLeft(current.right);
 		}
-		return current;
+		return current.value;
 	}
 	
 
-	private void pushLeft(TreeNode<K, V> current) {
+	private void pushLeft(TreeNode<?, V> current) {
 		while(current != null) {
 			visit.push(current);
 			current = current.left;
