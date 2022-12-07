@@ -152,7 +152,9 @@ public class CompleteBinaryTree<E> implements Iterable<E> {
 		 }
 		 return toString(left) + "," + nodes[index].toString()+ "," + toString(right);
 	}
-	public static void main(String[] args) {
+}
+/** Unit Test
+ * public static void main(String[] args) {
 		CompleteBinaryTree<String> CBT = new CompleteBinaryTree<String>();
 		CBT.add("zero");
 		CBT.add("neg-five");
@@ -166,10 +168,6 @@ public class CompleteBinaryTree<E> implements Iterable<E> {
 			System.out.println(iter.next());
 		}
 		}
- 
-	
-}
-/** Unit Test
  *	public static void main(String[] args) {
 		CompleteBinaryTree<String> CBT = new CompleteBinaryTree<String>();
 		CBT.add("rahjmy");
