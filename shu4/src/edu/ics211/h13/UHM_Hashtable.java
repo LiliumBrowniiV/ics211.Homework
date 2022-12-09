@@ -65,7 +65,7 @@ public class UHM_Hashtable<K,V> {
 				}
 			}
 			table[hash].add(new Pair<K,V>(key, value));
-			if(loadFactor() > maxLoadFactor) {
+			while(loadFactor() > maxLoadFactor) {
 				rehash(table.length * 3 + 1);
 			}
 		} 	
@@ -153,10 +153,13 @@ public class UHM_Hashtable<K,V> {
 	public int maxListLen() {
 		int largest = 0;
 		for(LinkedList<?> ll : table) {
-			largest = (largest < ll.size() ? ll.size() : largest);
+			if(ll != null) {
+				largest = (largest < ll.size() ? ll.size() : largest);
+			}
 		}
 		return largest;
 	}
+	
 	
 	/** Do Not Change - Used in grading */
 	public int keysAtIndex(int index) { return table[index].size(); }
@@ -165,8 +168,8 @@ public class UHM_Hashtable<K,V> {
 	public int arrayLen() { return table.length; }
 }
 
-/**
- * Unit Test
+
+/** Unit test 
  * public String toString() {
 		StringBuilder str = new StringBuilder();
 		for(int i = 0; i < table.length; i++) {
@@ -179,22 +182,130 @@ public class UHM_Hashtable<K,V> {
 		}
 		return str.toString();
 	}
+	
 	public void sout(Object s) {
 		System.out.println(s);
 	}
 	
+	public boolean test0 () {
+		UHM_Hashtable<String, String> hash =new UHM_Hashtable<String, String>();
+		if(hash.size() != 0) {return false;}
+		hash.put("foo", "bar1");
+		if(hash.size() != 1) {return false;}
+		hash.put("foo", "bar2");
+		if(hash.size() != 1) {return false;}
+		if(!hash.get("foo").equals("bar2")) {return false;}
+		return true;
+		
+	}
+	public boolean test1 () {
+		UHM_Hashtable<String, String> hash =new UHM_Hashtable<String, String>(20,0.75);
+		if(hash.arrayLen() != 20) {return false;}
+		
+		if(hash.loadFactor() != 0) {return false;}
+		hash.put("foo", "bar2");
+		if(hash.arrayLen() != 20) {return false;}
+		
+		if(hash.loadFactor() != 0.05) {return false;}
+		
+		if(hash.maxListLen() != 1) {return false;}
+		return true;
+		
+	}
+	public boolean test2 () {
+		UHM_Hashtable<String, String> hash =new UHM_Hashtable<String, String>(8,0.75);
+		hash.put("aah", "val0");
+		hash.put("aap", "val1");
+		if(hash.maxListLen() != 2) {return false;}
+		if(hash.size() != 2) {return false;}
+		if(hash.loadFactor() != 0.25) {return false;}
+		hash.clear();
+		if(hash.size() != 0) {return false;}
+		if(hash.loadFactor() != 0) {return false;}
+		return true;
+		
+	}
+	public boolean test3 () {
+		UHM_Hashtable<String, String> hash =new UHM_Hashtable<String, String>(4,0.5);
+		hash.put("aah", "val0");
+		hash.put("aap", "val1");
+		hash.put("aay", "val2");
+		if(hash.arrayLen() <= 4) {return false;}
+		try {
+			hash.put(null, null);
+			return false;
+		}catch(NullPointerException npe){
+			
+		}
+		return true;
+	}
+	public boolean test4 () {
+		UHM_Hashtable<String, String> hash =new UHM_Hashtable<String, String>(4,0.5);
+		hash.put("aah", "val0");
+		hash.put("aap", "val1");
+		hash.put("aay", "val2");
+		if(! hash.replace("aay", "val3").equals("val2")) {return false;}
+		if(!hash.get("aay").equals("val3")) {return false;}
+		return true;
+		
+	}
+	public boolean test5 () {
+		UHM_Hashtable<String, String> hash =new UHM_Hashtable<String, String>(4,0.5);
+		hash.put("aah", "val0");
+		hash.put("aap", "val1");
+		hash.put("aay", "val2");
+		if(hash.get("aay") == null) {return false;}
+		hash.remove("aay");
+		if(hash.get("aay") != null) {return false;}
+		return true;
+		
+	}
+	public boolean test6() {
+		UHM_Hashtable<Integer, Integer> hash =new UHM_Hashtable<Integer, Integer>(100,0.5);
+		for(int ii = 0; ii < 48; ++ii) {
+			hash.put(ii, (int) Math.random());
+		}
+		
+		if(hash.arrayLen() != 100) {return false;}
+		if(hash.maxListLen() > 48) {return false;}
+		if(hash.maxListLen() > 1) {return false;}
+		return true;
+		
+	}
+	public boolean test7 () {
+		UHM_Hashtable<Integer, Integer> hash =new UHM_Hashtable<Integer, Integer>(100,100);
+		for(int ii = 0; ii < 9999; ++ii) {
+			hash.put(ii, (int)Math.random());
+		}
+		if(hash.maxListLen() < 95) {return false;};
+		return true;
+		
+	}
+	public boolean test8 () {
+		UHM_Hashtable<String, String> hash =new UHM_Hashtable<String, String>(8,0.5);
+		hash.put("aah", "val0");
+		hash.put("aap", "val1");
+		hash.put("aax", "val2");
+		hash.put("aay", "val2");
+		hash.put("aaz", "val2");
+		if(hash.arrayLen() <= 8) { hash.sout("af"); return false;}
+		if(hash.size() != 5) {hash.sout("sf"); return false;}
+		if(hash.maxListLen() > 5 || hash.maxListLen() < 1) { hash.sout("mf");return false;}
+		if(!hash.get("aax").equals(hash.get("aay"))) {return false;}
+		return true;
+	}
 	public static void main(String[] args) {
-		UHM_Hashtable<Integer, String> HT = new UHM_Hashtable<Integer, String>();
-		HT.put(0, "Hello");
-		HT.put(11, "World");
-		HT.put(1, "a");
-		HT.put(12, "b");
-		HT.put(2, "c");
-		HT.put(13, "d");
-		HT.put(3, "e");
-		HT.put(14, "f");
-		HT.sout(HT);
-		HT.sout(HT.get(14));
-		HT.sout(HT.size());
+		UHM_Hashtable<String, String> HT =new UHM_Hashtable<String, String>();
+		System.out.println("test 0 " +  HT.test0());
+		System.out.println("test 1 " +  HT.test1());
+		System.out.println("test 2 " +  HT.test2());
+		System.out.println("test 3 " +  HT.test3());
+		System.out.println("test 4 " +  HT.test4());
+		System.out.println("test 5 " +  HT.test5());
+		System.out.println("test 6 " +  HT.test6());
+		System.out.println("test 7 " +  HT.test7());
+		System.out.println("test 8 " +  HT.test8());
 	}
  */
+ 
+
