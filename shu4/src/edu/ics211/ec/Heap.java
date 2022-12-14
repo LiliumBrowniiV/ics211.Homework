@@ -22,6 +22,9 @@ public class Heap{
 		MinHeap = new Quantizable[31];
 		size = 0;
 	}
+	private Heap(Quantizable[] q) {
+		MinHeap = q;
+	}
 	
 	public void insert(Quantizable q) {
 		int inc = size();
@@ -68,8 +71,10 @@ public class Heap{
 		System.arraycopy(temp, 0, MinHeap, 0, temp.length);
 	}
 	
-	public static void heapify(Quantizable... q) {
+	public static Heap heapify(Quantizable... q) {
 		heapify(0, q);
+		Heap heap = new Heap(q);
+		return heap;
 	}
 	
 	private static void heapify(int i, Quantizable[] q) {
@@ -77,101 +82,77 @@ public class Heap{
 		int smallest = i;
 		int left  = 2 * i + 1;
 		int right = 2 * i + 2;
-		if(q[smallest] == null || q[right] == null || q[left] == null) {
+		if(q[right] == null && q[left] == null) {
 			return;
-		} 
-		if(q[left].compareTo(q[smallest]) < 0) {
-			smallest = left;
-		} 
-		if(q[right].compareTo(q[smallest]) < 0) {
-			smallest = right;
+		} else if(q[right] == null) {
+			if(q[left].compareTo(q[smallest]) < 0) {
+				smallest = left;
+			} else {
+				return;
+			}
+		} else {
+			if(q[left].compareTo(q[smallest]) < 0) {
+				smallest = left;
+			} 
+			if(q[right].compareTo(q[smallest]) < 0) {
+				smallest = right;
+			}
 		}
 		if(smallest != i) {
 			Quantizable temp = q[i];
 			q[i] = q[smallest];
 			q[smallest] = temp;
 		} 
-		heapify(left, q);
-		heapify(right,q);
+		heapify(left,  q);
+		heapify(right, q);
 	}
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 		for(int i = 0; i < MinHeap.length; i++) {
 			if(MinHeap[i] != null)
-			str.append(MinHeap[i] + " ");
+			str.append(MinHeap[i].quantize() + " ");
 		}
 		return str.toString();
 	}
 	public void out(Object a) {
 		System.out.println(a);
-	}
+	} 
 }
+
 /**
- * public static void main(String[] args) {
-		
-		class Node implements Quantizable{
-			private Object obj;
-			public Node (Object obj){
-				this.obj = obj;
-			}
-			@Override
-			public double quantize() {
-				return obj.hashCode();
-			}
-			public String toString() {
-				return obj.toString();
-			}
+* public boolean test0() {
+	class Decimal implements Quantizable{
+		double d;
+		public Decimal(double d) {
+			this.d = d;
 		}
-		Node one = new Node(1);
-		Node two = new Node(2);
-		Node three = new Node(3);
-		Node four = new Node(4);
-		Node five = new Node(5);
-		Node six = new Node(6);
-		Node seven = new Node(7);
-		Node eight = new Node(8);
-		Node nine = new Node(9);
-		Node ten = new Node(10);
-		Node ten1 = new Node(11);
-		Node ten2 = new Node(12);
-		Node ten3 = new Node(13);
-		Node ten4 = new Node(14);
-		Node ten5 = new Node(15);
+		@Override
+		public double quantize() {
+			return Double.valueOf(d);
+		}
 		
-		Heap minheap = new Heap();
-		minheap.insert(ten4);
-		minheap.insert(five);
-		minheap.insert(two);
-		minheap.insert(ten1);
-		minheap.insert(eight);
-		minheap.insert(ten3);
-		minheap.insert(ten);
-		minheap.insert(three);
-		minheap.insert(ten2);
-		minheap.insert(four);
-		minheap.insert(ten5);
-		minheap.insert(one);
-		minheap.insert(six);
-		minheap.insert(seven);
-		minheap.insert(nine);
-		minheap.out(minheap);
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.delete_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.delete_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		minheap.extract_min();
-		
-		minheap.out(minheap);
-		minheap.out(minheap.size());
 	}
- */
+	Decimal[] numbers = {
+			new Decimal(9),new Decimal(5),new Decimal(1),new Decimal(4),new Decimal(7),new Decimal(3), new Decimal(2), new Decimal(8)
+	};
+	Heap test = new Heap();
+	for(Decimal num : numbers) {
+		test.insert(num);
+	}
+	Quantizable min = new Decimal(0);
+	System.out.println(test);
+	for(int i = 0; i < numbers.length; i++) {
+		Quantizable temp = test.extract_min();
+		if(temp.quantize() <= min.quantize()) {
+			return false;
+		}	
+		min = temp;
+	}
+	return true;
+}
+public static void main(String[] args) {
+	Heap test = new Heap();
+	System.out.println(test.test0());
+}
+*/
+
